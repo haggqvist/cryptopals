@@ -73,5 +73,4 @@ def detect_ecb_or_cbc(encryption_oracle: EncryptionOracle, repeat: int = 4) -> s
     out = encryption_oracle.encrypt(plaintext * repeat)
     if might_be_ecb(out):
         return "ECB"
-    else:
-        return "CBC"
+    return "CBC"

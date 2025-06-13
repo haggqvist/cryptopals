@@ -17,8 +17,8 @@ test_query_dict = {
 
 
 def parse_query_string(query_string: str) -> dict[str, str]:
-    map = parse_qs(qs=query_string)
-    return {k: v[0] for k, v in map.items()}
+    _map = parse_qs(qs=query_string)
+    return {k: v[0] for k, v in _map.items()}
 
 
 assert parse_query_string(query_string=query_string) == test_query_dict

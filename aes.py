@@ -61,10 +61,7 @@ class CBC(AES):
         plaintext = b""
         ecb = ECB(key=self.algorithm.key)
         for n, block in enumerate(ciphertext_blocks):
-            if n == 0:
-                previous = self.iv
-            else:
-                previous = ciphertext_blocks[n - 1]
+            previous = self.iv if n == 0 else ciphertext_blocks[n - 1]
             decrypted = ecb.decrypt(block)
             plain = bytes(xor(decrypted, previous))
             plaintext += plain
@@ -73,7 +70,7 @@ class CBC(AES):
 
 def might_be_ecb(ciphertext: bytes, block_size: int = 16) -> set[tuple[int, ...]]:
     duplicates: set[tuple[int, ...]] = set()
-    blocks = [block for block in batched(ciphertext, block_size)]
+    blocks = list(batched(ciphertext, block_size))
     for block in blocks:
         if blocks.count(block) > 1 and block not in duplicates:
             duplicates.add(block)

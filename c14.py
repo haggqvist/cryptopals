@@ -1,8 +1,8 @@
 import base64
 import string
 
+from c12 import brute_force_single_byte, find_padding_length, unknown_string
 from oracle import EncryptionOracle, RandomPrefixPaddingOracle
-from c12 import unknown_string, find_padding_length, brute_force_single_byte
 
 
 def find_oracle_prefix_length(oracle: EncryptionOracle, block_size: int) -> int:
@@ -28,15 +28,15 @@ def find_oracle_prefix_length(oracle: EncryptionOracle, block_size: int) -> int:
         if test_block == target_block:
             break
         padding += 1
-    prefix_length = n * block_size + block_size - padding
-    return prefix_length
+    return n * block_size + block_size - padding
 
 
 if __name__ == "__main__":
     prefix_oracle = RandomPrefixPaddingOracle(padding=base64.b64decode(unknown_string))
     block_size = 16
     prefix_length = find_oracle_prefix_length(
-        oracle=prefix_oracle, block_size=block_size
+        oracle=prefix_oracle,
+        block_size=block_size,
     )
     expected_message_length = (
         find_padding_length(oracle=prefix_oracle, block_size=block_size) - prefix_length

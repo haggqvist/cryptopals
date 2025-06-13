@@ -26,7 +26,7 @@ class CBCUserStringOracle:
     def decrypt(self, ciphertext: bytes) -> bytes:
         return CBC(key=self.key, iv=self.iv).decrypt(ciphertext=ciphertext)
 
-    def decrypt_and_verify(self, ciphertext: bytes, verbose: bool = False) -> bool:
+    def decrypt_and_verify(self, ciphertext: bytes, *, verbose: bool = False) -> bool:
         plaintext = pkcs7_unpad(self.decrypt(ciphertext=ciphertext))
         if verbose:
             print(plaintext)
@@ -49,13 +49,13 @@ if __name__ == "__main__":
 
     # create a block that when xor'd against fill block produces the target msg
     flip_block = bytes(
-        xor(fill * block_size, (block_size - len(target)) * fill + target)
+        xor(fill * block_size, (block_size - len(target)) * fill + target),
     )
     assert bytes(xor(flip_block, payload[:block_size])) == b"aaaaa;admin=true"
 
     # xor against block 3 in ciphertext
     crafted_block = bytes(
-        xor(ciphertext[2 * block_size : (2 + 1) * block_size], flip_block)
+        xor(ciphertext[2 * block_size : (2 + 1) * block_size], flip_block),
     )
     # inject block in ct
     crafted_ct = (

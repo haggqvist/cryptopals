@@ -1,9 +1,10 @@
+from __future__ import annotations
+
 import base64
 import string
 
-from oracle import detect_ecb_or_cbc, WeirdPaddingOracle, EncryptionOracle
+from oracle import EncryptionOracle, WeirdPaddingOracle, detect_ecb_or_cbc
 from util import detect_block_size
-
 
 unknown_string = (
     "Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkg"
@@ -38,8 +39,7 @@ def brute_force_single_byte(
         result = oracle.encrypt(plaintext=pad + bytes([byte]))
         if result[offset * block_size : (1 + offset) * block_size] == target_block:
             return bytes([byte])
-    else:
-        return b""
+    return b""
 
 
 if __name__ == "__main__":
@@ -49,7 +49,8 @@ if __name__ == "__main__":
     assert detect_ecb_or_cbc(padding_oracle) == "ECB"
 
     expected_message_length = find_padding_length(
-        oracle=padding_oracle, block_size=block_size
+        oracle=padding_oracle,
+        block_size=block_size,
     )
     print(f"Expected msg length: {expected_message_length}")
 
