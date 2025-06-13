@@ -19,7 +19,7 @@ def find_padding_length(oracle: EncryptionOracle, block_size: int) -> int:
         length = len(oracle.encrypt(bytes(i)))
         if length > initial_length:
             break
-    return initial_length - i + 1
+    return length - block_size - i + 1
 
 
 def brute_force_single_byte(
